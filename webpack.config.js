@@ -1,6 +1,3 @@
-/*********************************
- *       import webpack plugins
- ********************************/
 const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
@@ -15,22 +12,17 @@ const DynamicCdnWebpackPlugin = require('dynamic-cdn-webpack-plugin');
  *       define file paths
  ********************************/
 const destination = 'dist';
-const htmlTemplate = './src/client/dialog-template.html';
+const htmlTemplate = './src/client/template.html';
 
 /*********************************
  *    client entry point paths
  ********************************/
 const clientEntrypoints = [
   {
-    name: 'CLIENT - main dialog',
-    entry: './src/client/main.jsx',
-    filename: 'main.html',
-  },
-  {
-    name: 'CLIENT - about sidebar',
-    entry: './src/client/about.jsx',
-    filename: 'about.html',
-  },
+    name: "INDEX - start page",
+    entry: "./src/client/index.jsx",
+    filename: "Index.html"
+  }
 ];
 
 /*********************************
