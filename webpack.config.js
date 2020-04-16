@@ -26,6 +26,50 @@ const clientEntrypoints = [
 ];
 
 /*********************************
+ *       Sass settings
+ ********************************/
+
+const sassConfig = {
+  entry: './src/client/styles.js',
+  output: {
+    filename: 'styles.js',
+    path: path.resolve(__dirname, 'src/client/dist')
+  },
+  module: {
+    rules: [
+      {
+        test: /\.(scss)$/,
+        use: [
+          {
+            // Adds CSS to the DOM by injecting a `<style>` tag
+            loader: 'style-loader'
+          },
+          {
+            // Interprets `@import` and `url()` like `import/require()` and will resolve them
+            loader: 'css-loader'
+          },
+          {
+            // Loader for webpack to process CSS with PostCSS
+            loader: 'postcss-loader',
+            options: {
+              plugins: function () {
+                return [
+                  require('autoprefixer')
+                ];
+              }
+            }
+          },
+          {
+            // Loads a SASS/SCSS file and compiles it to CSS
+            loader: 'sass-loader'
+          }
+        ]
+      }
+    ]
+  }
+};
+
+/*********************************
  *       Declare settings
  ********************************/
 
@@ -164,10 +208,11 @@ const serverConfig = {
 };
 
 module.exports = [
+  sassConfig,
   // 1. Copy the appscript file.
   appsscriptConfig,
-  // 2. One client bundle for each client entrypoint.
+  // // 2. One client bundle for each client entrypoint.
   ...clientConfigs,
-  // 3. Bundle the server
+  // // 3. Bundle the server
   serverConfig,
 ];
