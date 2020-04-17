@@ -1,4 +1,6 @@
 function doGet() {
+}
+function getGroups() {
 }!function(e, a) {
     for (var i in a) e[i] = a[i];
 }(this, function(modules) {
@@ -45,7 +47,7 @@ function doGet() {
         return __webpack_require__.d(getter, "a", getter), getter;
     }, __webpack_require__.o = function(object, property) {
         return Object.prototype.hasOwnProperty.call(object, property);
-    }, __webpack_require__.p = "", __webpack_require__(__webpack_require__.s = 1);
+    }, __webpack_require__.p = "", __webpack_require__(__webpack_require__.s = 2);
 }([ function(module, __webpack_exports__, __webpack_require__) {
     "use strict";
     function doGet(e) {
@@ -57,10 +59,57 @@ function doGet() {
     }));
 }, function(module, __webpack_exports__, __webpack_require__) {
     "use strict";
+    var config_spreadsheets = {
+        members: "Members",
+        groups: "Groups"
+    };
+    function _slicedToArray(arr, i) {
+        return function(arr) {
+            if (Array.isArray(arr)) return arr;
+        }(arr) || function(arr, i) {
+            if (!(Symbol.iterator in Object(arr) || "[object Arguments]" === Object.prototype.toString.call(arr))) return;
+            var _arr = [], _n = !0, _d = !1, _e = undefined;
+            try {
+                for (var _s, _i = arr[Symbol.iterator](); !(_n = (_s = _i.next()).done) && (_arr.push(_s.value), 
+                !i || _arr.length !== i); _n = !0) ;
+            } catch (err) {
+                _d = !0, _e = err;
+            } finally {
+                try {
+                    _n || null == _i["return"] || _i["return"]();
+                } finally {
+                    if (_d) throw _e;
+                }
+            }
+            return _arr;
+        }(arr, i) || function() {
+            throw new TypeError("Invalid attempt to destructure non-iterable instance");
+        }();
+    }
+    var Group = function Group(_ref) {
+        var _ref2 = _slicedToArray(_ref, 2), name = _ref2[0], id = _ref2[1];
+        !function(instance, Constructor) {
+            if (!(instance instanceof Constructor)) throw new TypeError("Cannot call a class as a function");
+        }(this, Group), this.name = name, this.id = id;
+    };
+    __webpack_require__.d(__webpack_exports__, "a", (function() {
+        return app_getGroups;
+    }));
+    var app_getGroups = function() {
+        var rows = function(sheetName) {
+            var getValues = !(arguments.length > 1 && arguments[1] !== undefined) || arguments[1], spreadSheet = SpreadsheetApp.getActiveSpreadsheet(), sheet = spreadSheet.getSheetByName(sheetName);
+            return getValues ? sheet.getDataRange().getValues() : sheet;
+        }(config_spreadsheets.groups);
+        return rows.shift(), rows.map((function(item) {
+            return new Group(item);
+        }));
+    };
+}, function(module, __webpack_exports__, __webpack_require__) {
+    "use strict";
     __webpack_require__.r(__webpack_exports__), function(global) {
-        var _app_routes__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(0);
-        global.doGet = _app_routes__WEBPACK_IMPORTED_MODULE_0__["a"];
-    }.call(this, __webpack_require__(2));
+        var _app_routes__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(0), _app__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(1);
+        global.doGet = _app_routes__WEBPACK_IMPORTED_MODULE_0__["a"], global.getGroups = _app__WEBPACK_IMPORTED_MODULE_1__["a"];
+    }.call(this, __webpack_require__(3));
 }, function(module, exports) {
     var g;
     g = function() {
