@@ -2,9 +2,6 @@
 	"folders": [
 		{
 			"path": "."
-		},
-		{
-			"path": "../APP_react-project-gym-classes"
 		}
 	],
 	"settings": {}
