@@ -1,1 +1,8 @@
 @import "~bootstrap/scss/bootstrap";
+
+#journal {
+  .block {
+    background-color: $gray-100;
+    border-radius: .2rem;
+  }
+}

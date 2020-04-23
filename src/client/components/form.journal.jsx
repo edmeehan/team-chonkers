@@ -1,106 +1,233 @@
 import React from 'react';
-import InputMask from "react-input-mask";
+import PropTypes from 'prop-types';
+import {IMaskInput} from 'react-imask';
 
-export default function FormJournal() {
-  const defMask = [/[0-9]/,];
+import Modal from 'react-bootstrap/Modal'
+
+import { JournalEntry } from '../../models';
+
+export default function FormJournal(props) {
+  const weightMask = '000.0';
+  const defMask = '00.00';
+  
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const data = {};
+    const formData = new FormData(event.target);
+    for (const [key, value]  of formData.entries()) {
+      data[key] = value;
+    }
+    console.log(event, data);
+  }
+
+  const handleClose = (event) => {
+    console.log(event);
+  }
 
   return (
-    <form action="">
-      <div className="form-row">
-        <div className="form-group col-6">
-          <label htmlFor="">Do you feel you made progress this week?</label>
-          <div>
-            {[1,2,3,4,5].map((value) =>
-              <div key={value} className="form-check form-check-inline">
-                <input type="radio" name="progress" value={value} className="form-check-input"/>
-                <label className="form-check-label">{value}</label>
+    <Modal
+      size="lg"
+      show={props.show}
+      onHide={handleClose}>
+      <Modal.Body>
+        <form id="journal"
+          onSubmit={handleSubmit}
+          className="text-center">
+          
+          <fieldset>
+            <div className="form-group py-4">
+              <h5>Do you feel you made progress this week?</h5>
+              <small className="mr-4 text-muted">Not so much.</small>
+              {[1,2,3,4,5].map((value) =>
+                <div key={value} className="form-check form-check-inline">
+                  <input type="radio" name="progress" value={value} className="form-check-input"/>
+                  <label className="form-check-label">{value}</label>
+                </div>
+              )}
+              <small className="ml-2 text-muted">Fuck yeah I did!</small>
+            </div>
+            
+            <div className="form-row justify-content-center">
+              <div className="form-group col col-sm-6 col-md-4 col-lg-3">
+                <h5>Weight</h5>
+                <div className="input-group">
+                  <IMaskInput
+                    name="weight"
+                    required
+                    className="form-control"
+                    mask={weightMask}
+                  />
+                  <div className="input-group-append">
+                    <span className="input-group-text">lbs</span>
+                  </div>
+                </div>
               </div>
-            )}
-          </div>
-        </div>
-      </div>
-      
-      <div className="form-row">
-        <div className="form-group col-2">
-          <label>Weight</label>
-          <InputMask mask={defMask} maskPlaceholder={null}  name="weight" className="form-control" />
+            </div>
+          </fieldset>
+          
+          <fieldset className="mt-5">
+            <div className="row">
+              <div className="col py-4">
+                <h4 className="text-muted">Measurements</h4>
+                <p><small>No flexing. Measure relaxed and in the same location.</small></p>
+              </div>
+            </div>
 
-        </div>
-      </div>
+            <h5>Biceps</h5>
+            <div className="form-row justify-content-center">
+              <div className="form-group col col-sm-6 col-md-4 col-lg-3">
+                <div className="input-group">
+                  <IMaskInput
+                    mask={defMask}
+                    placeholder="Left"
+                    name="lBicep"
+                    required
+                    className="form-control"/>
+                  <div className="input-group-append">
+                    <span className="input-group-text">in</span>
+                  </div>
+                </div>
+              </div>
+              <div className="form-group col col-sm-6 col-md-4 col-lg-3">
+                <div className="input-group">  
+                  <IMaskInput
+                    mask={defMask}
+                    placeholder="Right"
+                    name="rBicep"
+                    required
+                    className="form-control"/>
+                  <div className="input-group-append">
+                    <span className="input-group-text">in</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+              
+            <h5>Chest</h5>
+            <div className="form-row justify-content-center">
+              <div className="form-group col col-sm-6 col-md-4 col-lg-3">
+                <div className="input-group">
+                  <IMaskInput
+                    mask={defMask}
+                    name="chest"
+                    required
+                    className="form-control"/>
+                  <div className="input-group-append">
+                    <span className="input-group-text">in</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <h5>Waist</h5>
+            <div className="form-row justify-content-center">
+              <div className="form-group col col-sm-6 col-md-4 col-lg-3">
+                <div className="input-group">
+                  <IMaskInput
+                    mask={defMask}
+                    name="waist"
+                    required
+                    className="form-control"/>
+                  <div className="input-group-append">
+                    <span className="input-group-text">in</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <h5>Hips</h5>
+            <div className="form-row justify-content-center">
+              <div className="form-group col col-sm-6 col-md-4 col-lg-3">
+                <div className="input-group">
+                  <IMaskInput
+                    mask={defMask}
+                    name="hips"
+                    required
+                    className="form-control"/>
+                  <div className="input-group-append">
+                    <span className="input-group-text">in</span>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-      <hr/>
+            <h5>Thighs</h5>
+            <div className="form-row justify-content-center">
+              <div className="form-group col col-sm-6 col-md-4 col-lg-3">
+                <div className="input-group">
+                  <IMaskInput
+                    mask={defMask}
+                    placeholder="Left"
+                    name="lThigh"
+                    required
+                    className="form-control"/>
+                  <div className="input-group-append">
+                    <span className="input-group-text">in</span>
+                  </div>
+                </div>
+              </div>
+              <div className="form-group col col-sm-6 col-md-4 col-lg-3">
+                <div className="input-group">
+                  <IMaskInput
+                    mask={defMask}
+                    placeholder="Right"
+                    name="rThigh"
+                    required
+                    className="form-control"/>
+                  <div className="input-group-append">
+                    <span className="input-group-text">in</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </fieldset>
 
-      <h3>Measurements</h3>
-      <span>No flexing. Measure relaxed and in the same location. Measure in inches, using quarters.</span>
-      
-      <hr/>
+          <fieldset className="block pb-3 mt-5">  
+            <div className="row">
+              <div className="col py-4">
+                <h4 className="text-muted">Body Fat</h4>
+                <p><small>Optional</small></p>
+              </div>
+            </div>
 
-      <label>Biceps</label>
-      <div className="form-row">
-        <div className="form-group col-2">
-          <label htmlFor="">Left</label>
-          <InputMask mask={defMask} maskPlaceholder={null} name="lBicep" className="form-control"/>
-        </div>
-        <div className="form-group col-2">
-          <label htmlFor="">Right</label>
-          <InputMask mask={defMask} maskPlaceholder={null} name="rBicep" className="form-control"/>
-        </div>
-      </div>
-      
-      <div className="form-row">
-        <div className="form-group col-2">
-          <label htmlFor="">Chest</label>
-          <InputMask mask={defMask} maskPlaceholder={null} name="chest" className="form-control"/>
-        </div>
-      </div>
-      
-      <div className="form-row">
-        <div className="form-group col-2">
-          <label htmlFor="">Waist</label>
-          <InputMask mask={defMask} maskPlaceholder={null} name="waist" className="form-control"/>
-        </div>
-      </div>
-      
-      <div className="form-row">
-        <div className="form-group col-2">
-          <label htmlFor="">Hips</label>
-          <InputMask mask={defMask} maskPlaceholder={null} name="hips" className="form-control"/>
-        </div>
-      </div>
-
-      <label>Thighs</label>
-      <div className="form-row">
-        <div className="form-group col-2">
-          <label htmlFor="">Left</label>
-          <InputMask mask={defMask} maskPlaceholder={null} name="lThigh" className="form-control"/>
-        </div>
-        <div className="form-group col-2">
-          <label htmlFor="">Right</label>
-          <InputMask mask={defMask} maskPlaceholder={null} name="rThigh" className="form-control"/>
-        </div>
-      </div>
-
-      <hr/>
-
-      <h3>Calipers</h3>
-      <span>Optional body fat %</span>
-
-      <hr/>
-
-      <div className="form-row">
-        <div className="form-group col-2">
-          <label htmlFor="">Measurement</label>
-          <InputMask mask="999" name="caliperMeasurment" className="form-control"/>
-          <small className="form-text text-muted">in millimeters</small>
-        </div>
-      </div>
-
-      <div className="form-row">
-        <div className="form-group col-2">
-          <label htmlFor="">Body Fat</label>
-          <InputMask mask="99.9%" name="bodyFat" className="form-control"/>
-        </div>
-      </div>
-    </form>
+            <div className="form-row justify-content-around">
+              <div className="form-group col col-sm-6 col-md-4 col-lg-3">
+                <label>Caliper Measurement</label>
+                <div className="input-group">
+                  <IMaskInput
+                    mask='00'
+                    name="caliperMeasurment"
+                    className="form-control"/>
+                  <div className="input-group-append">
+                    <span className="input-group-text">mm</span>
+                  </div>
+                </div>
+              </div>
+              <div className="form-group col col-sm-6 col-md-4 col-lg-3">
+                <label>Body Fat</label>
+                <div className="input-group">
+                  <IMaskInput
+                    mask='00.0'
+                    name="bodyFat"
+                    className="form-control"/>
+                  <div className="input-group-append">
+                    <span className="input-group-text">%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </form>
+      </Modal.Body>
+      <Modal.Footer>
+        <button className="btn btn-secondary">Cancel</button>
+        <button type="submit" form="journal" className="btn btn-primary">Submit</button>
+      </Modal.Footer>
+    </Modal>
   )
 }
+
+FormJournal.propTypes = {
+  show: PropTypes.bool,
+  journal: JournalEntry
+};

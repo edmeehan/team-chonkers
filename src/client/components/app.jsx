@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import { LineChart } from 'react-chartkick';
 import 'chart.js';
 import server from '../server';
+// components
 import FormJournal from './form.journal.jsx';
 import FormWorkout from './form.workout.jsx';
 
@@ -10,6 +11,7 @@ export default function App() {
   const [members, setMembers] = useState([]);
   const [journals, setJournals] = useState([]);
   const [workouts, setWorkouts] = useState([]);
+  const [showJournal, setShowJournal] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -27,8 +29,16 @@ export default function App() {
     })
   }, []);
 
-  const onMemberClick = (id, event) => {
-    console.log(members, journals, workouts);
+  // const onMemberClick = (id, event) => {
+  //   console.log(members, journals, workouts);
+  // }
+
+  const doStuff = (e) => {
+    console.log('done',e);
+  }
+
+  const handleJournalOpen = () => {
+    setShowJournal(true);
   }
 
   const test = [
@@ -42,10 +52,18 @@ export default function App() {
         <span className="navbar-brand mb-0 h1">Team Chonkers</span>
       </nav>
       <div className="container">
-        <LineChart data={test} curve={false} />
-        <FormJournal></FormJournal>
+        <div className="row">
+          <div className="col mt-5 mb-4">
+            <LineChart data={test} curve={false} />
+          </div>
+        </div>
+
+        <button onClick={handleJournalOpen} className="btn btn-primary">Add Journal Entry</button>
+        
+        <FormJournal show={showJournal} onClose={doStuff}></FormJournal>
         <FormWorkout></FormWorkout>
-        <div className="row justify-content-center">
+        
+        {/* <div className="row justify-content-center">
           <div className="col col-md-6 col-lg-4 mt-5">
             <ul className="list-group">
               {members.map((member) => 
@@ -60,7 +78,8 @@ export default function App() {
               )}
             </ul>
           </div>
-        </div>
+        </div> */}
+      
       </div>
     </div>
   );

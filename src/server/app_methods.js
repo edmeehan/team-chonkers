@@ -1,5 +1,5 @@
 import md5 from 'md5';
-import { Chonker, JournalEntry, WorkoutEntry } from './models';
+import { Chonker, JournalEntry, WorkoutEntry } from '../models';
 
 function ugh(value) {
   return JSON.parse(JSON.stringify(value));

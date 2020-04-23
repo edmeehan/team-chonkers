@@ -60,29 +60,6 @@ function getState() {
 }([ function(module, __webpack_exports__, __webpack_require__) {
     "use strict";
     var md5 = __webpack_require__(3), md5_default = __webpack_require__.n(md5);
-    function _slicedToArray(arr, i) {
-        return function(arr) {
-            if (Array.isArray(arr)) return arr;
-        }(arr) || function(arr, i) {
-            if (!(Symbol.iterator in Object(arr) || "[object Arguments]" === Object.prototype.toString.call(arr))) return;
-            var _arr = [], _n = !0, _d = !1, _e = undefined;
-            try {
-                for (var _s, _i = arr[Symbol.iterator](); !(_n = (_s = _i.next()).done) && (_arr.push(_s.value), 
-                !i || _arr.length !== i); _n = !0) ;
-            } catch (err) {
-                _d = !0, _e = err;
-            } finally {
-                try {
-                    _n || null == _i["return"] || _i["return"]();
-                } finally {
-                    if (_d) throw _e;
-                }
-            }
-            return _arr;
-        }(arr, i) || function() {
-            throw new TypeError("Invalid attempt to destructure non-iterable instance");
-        }();
-    }
     function ugh(value) {
         return JSON.parse(JSON.stringify(value));
     }
@@ -93,44 +70,47 @@ function getState() {
     function getMembers() {
         var rows = getSheet(PropertiesService.getScriptProperties().getProperty("sheet_members"));
         return rows.shift(), ugh(rows.map((function(item) {
-            return {
-                id: (_ref2 = _slicedToArray(item, 3))[0],
-                name: _ref2[1],
-                image: _ref2[2]
-            };
-            var _ref2;
+            return function([id, name, image]) {
+                return {
+                    id: id,
+                    name: name,
+                    image: image
+                };
+            }(item);
         })));
     }
     function getJournals() {
         var rows = getSheet(PropertiesService.getScriptProperties().getProperty("sheet_journals"));
         return rows.shift(), ugh(rows.map((function(item) {
-            return {
-                id: (_ref4 = _slicedToArray(item, 13))[0],
-                timeStamp: _ref4[1],
-                weight: _ref4[2],
-                lBicep: _ref4[3],
-                rBicep: _ref4[4],
-                waist: _ref4[5],
-                hips: _ref4[6],
-                lThigh: _ref4[7],
-                rThigh: _ref4[8],
-                chest: _ref4[9],
-                caliperMeasurment: _ref4[10],
-                bodyFat: _ref4[11],
-                progress: _ref4[12]
-            };
-            var _ref4;
+            return function([id, timeStamp, weight, lBicep, rBicep, waist, hips, lThigh, rThigh, chest, caliperMeasurment, bodyFat, progress]) {
+                return {
+                    id: id,
+                    timeStamp: timeStamp,
+                    weight: weight,
+                    lBicep: lBicep,
+                    rBicep: rBicep,
+                    waist: waist,
+                    hips: hips,
+                    lThigh: lThigh,
+                    rThigh: rThigh,
+                    chest: chest,
+                    caliperMeasurment: caliperMeasurment,
+                    bodyFat: bodyFat,
+                    progress: progress
+                };
+            }(item);
         })));
     }
     function getWorkouts() {
         var rows = getSheet(PropertiesService.getScriptProperties().getProperty("sheet_workouts"));
         return rows.shift(), ugh(rows.map((function(item) {
-            return {
-                id: (_ref6 = _slicedToArray(item, 3))[0],
-                timeStamp: _ref6[1],
-                effort: _ref6[2]
-            };
-            var _ref6;
+            return function([id, timeStamp, effort]) {
+                return {
+                    id: id,
+                    timeStamp: timeStamp,
+                    effort: effort
+                };
+            }(item);
         })));
     }
     function getState() {
