@@ -1,34 +1,35 @@
-import React from 'react';
+import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import {IMaskInput} from 'react-imask';
-
 import Modal from 'react-bootstrap/Modal'
-
 import { JournalEntry } from '../../models';
+import server from '../server';
 
 export default function FormJournal(props) {
+  const [loading, setLoading] = useState(false);
   const weightMask = '000.0';
   const defMask = '00.00';
   
-  const handleSubmit = (event) => {
+  async function handleSubmit(event) {
     event.preventDefault();
-    const data = {};
+    setLoading(true);
+    const journal = {};
     const formData = new FormData(event.target);
     for (const [key, value]  of formData.entries()) {
-      data[key] = value;
+      journal[key] = value;
     }
-    console.log(event, data);
-  }
-
-  const handleClose = (event) => {
-    console.log(event);
+    // handle updating
+    if(await server.createJournal(journal)) {
+      props.onClose();
+      setLoading(false);
+    }
   }
 
   return (
     <Modal
       size="lg"
-      show={props.show}
-      onHide={handleClose}>
+      onHide={props.onClose}
+      show={props.show}>
       <Modal.Body>
         <form id="journal"
           onSubmit={handleSubmit}
@@ -220,8 +221,16 @@ export default function FormJournal(props) {
         </form>
       </Modal.Body>
       <Modal.Footer>
-        <button className="btn btn-secondary">Cancel</button>
-        <button type="submit" form="journal" className="btn btn-primary">Submit</button>
+        <button className="btn btn-secondary"
+          onClick={props.onClose}>
+          Cancel
+        </button>
+        <button className="btn btn-primary"
+          disabled={loading}
+          type="submit"
+          form="journal">
+            Submit
+          </button>
       </Modal.Footer>
     </Modal>
   )
@@ -229,5 +238,6 @@ export default function FormJournal(props) {
 
 FormJournal.propTypes = {
   show: PropTypes.bool,
-  journal: JournalEntry
+  journal: JournalEntry,
+  onClose: PropTypes.func
 };

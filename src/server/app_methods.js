@@ -11,6 +11,8 @@ function getSheet(sheetName, getValues = true) {
   return getValues ? sheet.getDataRange().getValues() : sheet;
 }
 
+const getEmail = () => Session.getActiveUser().getEmail();
+
 export function getMembers() {
   const sheetName = PropertiesService.getScriptProperties().getProperty('sheet_members');
   const rows = getSheet(sheetName);
@@ -27,6 +29,32 @@ export function getJournals() {
   return ugh(modeled);
 }
 
+export function createJournal({
+  weight, lBicep, rBicep, waist, hips, lThigh,
+  rThigh, chest, caliperMeasurment, bodyFat, progress,
+}) {
+  const sheetName = PropertiesService.getScriptProperties().getProperty('sheet_journals');
+  return getSheet(sheetName, false).appendRow([
+    md5(getEmail),
+    new Date(),
+    weight,
+    lBicep,
+    rBicep,
+    waist,
+    hips,
+    lThigh,
+    rThigh,
+    chest,
+    caliperMeasurment,
+    bodyFat,
+    progress,
+  ]).getIndex();
+}
+
+export function updateJournal(index, journal) {
+
+}
+
 export function getWorkouts() {
   const sheetName = PropertiesService.getScriptProperties().getProperty('sheet_workouts');
   const rows = getSheet(sheetName);
@@ -39,7 +67,6 @@ export function getState() {
   const scriptProps = PropertiesService.getScriptProperties();
   const documentProps = PropertiesService.getDocumentProperties();
   const userProps = PropertiesService.getUserProperties();
-  const email = Session.getActiveUser().getEmail();
 
   const people = People.People.getBatchGet({
     resourceNames: ['people/me'],
@@ -50,7 +77,7 @@ export function getState() {
     scriptProperties: scriptProps.getProperties(),
     documentProperties: documentProps.getProperties(),
     userProperties: userProps.getProperties(),
-    userId: md5(email),
+    userId: md5(getEmail),
     people,
   });
 }

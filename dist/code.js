@@ -4,6 +4,10 @@ function getMembers() {
 }
 function getJournals() {
 }
+function createJournal() {
+}
+function updateJournal() {
+}
 function getWorkouts() {
 }
 function sendEmails() {
@@ -67,6 +71,24 @@ function getState() {
         var getValues = !(arguments.length > 1 && arguments[1] !== undefined) || arguments[1], spreadSheet = SpreadsheetApp.getActiveSpreadsheet(), sheet = spreadSheet.getSheetByName(sheetName);
         return getValues ? sheet.getDataRange().getValues() : sheet;
     }
+    __webpack_require__.d(__webpack_exports__, "c", (function() {
+        return getMembers;
+    })), __webpack_require__.d(__webpack_exports__, "b", (function() {
+        return getJournals;
+    })), __webpack_require__.d(__webpack_exports__, "a", (function() {
+        return createJournal;
+    })), __webpack_require__.d(__webpack_exports__, "g", (function() {
+        return updateJournal;
+    })), __webpack_require__.d(__webpack_exports__, "e", (function() {
+        return getWorkouts;
+    })), __webpack_require__.d(__webpack_exports__, "d", (function() {
+        return getState;
+    })), __webpack_require__.d(__webpack_exports__, "f", (function() {
+        return sendEmails;
+    }));
+    var getEmail = function() {
+        return Session.getActiveUser().getEmail();
+    };
     function getMembers() {
         var rows = getSheet(PropertiesService.getScriptProperties().getProperty("sheet_members"));
         return rows.shift(), ugh(rows.map((function(item) {
@@ -101,6 +123,11 @@ function getState() {
             }(item);
         })));
     }
+    function createJournal(_ref) {
+        var weight = _ref.weight, lBicep = _ref.lBicep, rBicep = _ref.rBicep, waist = _ref.waist, hips = _ref.hips, lThigh = _ref.lThigh, rThigh = _ref.rThigh, chest = _ref.chest, caliperMeasurment = _ref.caliperMeasurment, bodyFat = _ref.bodyFat, progress = _ref.progress;
+        return getSheet(PropertiesService.getScriptProperties().getProperty("sheet_journals"), !1).appendRow([ md5_default()(getEmail), new Date, weight, lBicep, rBicep, waist, hips, lThigh, rThigh, chest, caliperMeasurment, bodyFat, progress ]).getIndex();
+    }
+    function updateJournal(index, journal) {}
     function getWorkouts() {
         var rows = getSheet(PropertiesService.getScriptProperties().getProperty("sheet_workouts"));
         return rows.shift(), ugh(rows.map((function(item) {
@@ -114,7 +141,7 @@ function getState() {
         })));
     }
     function getState() {
-        var scriptProps = PropertiesService.getScriptProperties(), documentProps = PropertiesService.getDocumentProperties(), userProps = PropertiesService.getUserProperties(), email = Session.getActiveUser().getEmail(), people = People.People.getBatchGet({
+        var scriptProps = PropertiesService.getScriptProperties(), documentProps = PropertiesService.getDocumentProperties(), userProps = PropertiesService.getUserProperties(), people = People.People.getBatchGet({
             resourceNames: [ "people/me" ],
             personFields: "names,coverPhotos,photos,names,nicknames"
         });
@@ -122,22 +149,11 @@ function getState() {
             scriptProperties: scriptProps.getProperties(),
             documentProperties: documentProps.getProperties(),
             userProperties: userProps.getProperties(),
-            userId: md5_default()(email),
+            userId: md5_default()(getEmail),
             people: people
         });
     }
     function sendEmails(e) {}
-    __webpack_require__.d(__webpack_exports__, "b", (function() {
-        return getMembers;
-    })), __webpack_require__.d(__webpack_exports__, "a", (function() {
-        return getJournals;
-    })), __webpack_require__.d(__webpack_exports__, "d", (function() {
-        return getWorkouts;
-    })), __webpack_require__.d(__webpack_exports__, "c", (function() {
-        return getState;
-    })), __webpack_require__.d(__webpack_exports__, "e", (function() {
-        return sendEmails;
-    }));
 }, function(module, exports) {
     var charenc = {
         utf8: {
@@ -235,9 +251,10 @@ function getState() {
     "use strict";
     __webpack_require__.r(__webpack_exports__), function(global) {
         var _app_routes__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2), _app_methods__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(0);
-        global.doGet = _app_routes__WEBPACK_IMPORTED_MODULE_0__["a"], global.getMembers = _app_methods__WEBPACK_IMPORTED_MODULE_1__["b"], 
-        global.getJournals = _app_methods__WEBPACK_IMPORTED_MODULE_1__["a"], global.getWorkouts = _app_methods__WEBPACK_IMPORTED_MODULE_1__["d"], 
-        global.sendEmails = _app_methods__WEBPACK_IMPORTED_MODULE_1__["e"], global.getState = _app_methods__WEBPACK_IMPORTED_MODULE_1__["c"];
+        global.doGet = _app_routes__WEBPACK_IMPORTED_MODULE_0__["a"], global.getMembers = _app_methods__WEBPACK_IMPORTED_MODULE_1__["c"], 
+        global.getJournals = _app_methods__WEBPACK_IMPORTED_MODULE_1__["b"], global.createJournal = _app_methods__WEBPACK_IMPORTED_MODULE_1__["a"], 
+        global.updateJournal = _app_methods__WEBPACK_IMPORTED_MODULE_1__["g"], global.getWorkouts = _app_methods__WEBPACK_IMPORTED_MODULE_1__["e"], 
+        global.sendEmails = _app_methods__WEBPACK_IMPORTED_MODULE_1__["f"], global.getState = _app_methods__WEBPACK_IMPORTED_MODULE_1__["d"];
     }.call(this, __webpack_require__(5));
 }, function(module, exports) {
     var g;

@@ -12,6 +12,7 @@ export default function App() {
   const [journals, setJournals] = useState([]);
   const [workouts, setWorkouts] = useState([]);
   const [showJournal, setShowJournal] = useState(false);
+  const [showWorkout, setShowWorkout] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -29,17 +30,11 @@ export default function App() {
     })
   }, []);
 
-  // const onMemberClick = (id, event) => {
-  //   console.log(members, journals, workouts);
-  // }
+  const handleJournalClose = () => setShowJournal(false);
+  const handleJournalOpen = () => setShowJournal(true);
 
-  const doStuff = (e) => {
-    console.log('done',e);
-  }
-
-  const handleJournalOpen = () => {
-    setShowJournal(true);
-  }
+  const handleWorkoutClose = () => setShowWorkout(false);
+  const handleWorkoutOpen = () => setShowWorkout(true);
 
   const test = [
     {name: 'One', data: {"2017-01-01": 11, "2017-01-02": 6, "2017-01-03": 4}},
@@ -59,9 +54,10 @@ export default function App() {
         </div>
 
         <button onClick={handleJournalOpen} className="btn btn-primary">Add Journal Entry</button>
+        <button onClick={handleWorkoutOpen} className="btn btn-primary">Add Workout Entry</button>
         
-        <FormJournal show={showJournal} onClose={doStuff}></FormJournal>
-        <FormWorkout></FormWorkout>
+        <FormJournal show={showJournal} onClose={handleJournalClose}></FormJournal>
+        <FormWorkout show={showWorkout} onClose={handleWorkoutClose}></FormWorkout>
         
         {/* <div className="row justify-content-center">
           <div className="col col-md-6 col-lg-4 mt-5">

@@ -4,7 +4,11 @@ import * as methods from './app_methods';
 // Expose public functions
 global.doGet = routes.doGet;
 global.getMembers = methods.getMembers;
+
 global.getJournals = methods.getJournals;
+global.createJournal = methods.createJournal;
+global.updateJournal = methods.updateJournal;
+
 global.getWorkouts = methods.getWorkouts;
 global.sendEmails = methods.sendEmails;
 global.getState = methods.getState;
