@@ -1,5 +1,7 @@
 import md5 from 'md5';
+import _ from 'lodash';
 import { Chonker, JournalEntry, WorkoutEntry } from '../models';
+
 
 function ugh(value) {
   return JSON.parse(JSON.stringify(value));
@@ -23,10 +25,11 @@ export function getMembers() {
 
 export function getJournals() {
   const sheetName = PropertiesService.getScriptProperties().getProperty('sheet_journals');
-  const rows = getSheet(sheetName);
-  rows.shift();
+  const rows = getSheet(sheetName); rows.shift();
   const modeled = rows.map((item) => JournalEntry(item));
-  return ugh(modeled);
+  const test = ugh(modeled);
+
+  return _.groupBy(test, (item) => item.id);
 }
 
 export function createJournal({

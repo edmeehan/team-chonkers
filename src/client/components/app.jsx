@@ -11,6 +11,7 @@ export default function App() {
   const [members, setMembers] = useState([]);
   const [journals, setJournals] = useState([]);
   const [workouts, setWorkouts] = useState([]);
+
   const [showJournal, setShowJournal] = useState(false);
   const [showWorkout, setShowWorkout] = useState(false);
 
@@ -27,6 +28,8 @@ export default function App() {
       setJournals(journals);
       setWorkouts(workouts);
       setLoading(false);
+
+      console.log('journal', journals);
     })
   }, []);
 
