@@ -9,6 +9,6 @@ global.getJournals = methods.getJournals;
 global.createJournal = methods.createJournal;
 global.updateJournal = methods.updateJournal;
 
-global.getWorkouts = methods.getWorkouts;
+// global.getWorkouts = methods.getWorkouts;
 global.sendEmails = methods.sendEmails;
-global.getState = methods.getState;
+// global.getState = methods.getState;

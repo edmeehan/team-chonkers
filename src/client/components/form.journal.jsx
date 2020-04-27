@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import {IMaskInput} from 'react-imask';
 import Modal from 'react-bootstrap/Modal'
-import { JournalEntry } from '../../models';
+import { JournalEntry } from '../../models/journal';
 import server from '../server';
 
 export default function FormJournal(props) {

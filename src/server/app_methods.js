@@ -1,9 +1,8 @@
 import md5 from 'md5';
-import _ from 'lodash';
-import { Chonker, JournalEntry, WorkoutEntry } from '../models';
 
+const getEmail = () => Session.getActiveUser().getEmail();
 
-function ugh(value) {
+function serialize(value) {
   return JSON.parse(JSON.stringify(value));
 }
 
@@ -13,23 +12,16 @@ function getSheet(sheetName, getValues = true) {
   return getValues ? sheet.getDataRange().getValues() : sheet;
 }
 
-const getEmail = () => Session.getActiveUser().getEmail();
-
 export function getMembers() {
   const sheetName = PropertiesService.getScriptProperties().getProperty('sheet_members');
-  const rows = getSheet(sheetName);
-  rows.shift();
-  const modeled = rows.map((item) => Chonker(item));
-  return ugh(modeled);
+  const rows = getSheet(sheetName); rows.shift();
+  return serialize(rows);
 }
 
 export function getJournals() {
   const sheetName = PropertiesService.getScriptProperties().getProperty('sheet_journals');
   const rows = getSheet(sheetName); rows.shift();
-  const modeled = rows.map((item) => JournalEntry(item));
-  const test = ugh(modeled);
-
-  return _.groupBy(test, (item) => item.id);
+  return serialize(rows);
 }
 
 export function createJournal({
@@ -58,32 +50,23 @@ export function updateJournal(index, journal) {
 
 }
 
-export function getWorkouts() {
-  const sheetName = PropertiesService.getScriptProperties().getProperty('sheet_workouts');
-  const rows = getSheet(sheetName);
-  rows.shift();
-  const modeled = rows.map((item) => WorkoutEntry(item));
-  return ugh(modeled);
-}
+// export function getWorkouts() {
+//   const sheetName = PropertiesService.getScriptProperties().getProperty('sheet_workouts');
+//   const rows = getSheet(sheetName); rows.shift();
+//   return serialize(rows);
+// }
 
-export function getState() {
-  const scriptProps = PropertiesService.getScriptProperties();
-  const documentProps = PropertiesService.getDocumentProperties();
-  const userProps = PropertiesService.getUserProperties();
+// export function getState() {
+//   const scriptProps = PropertiesService.getScriptProperties();
+//   // const documentProps = PropertiesService.getDocumentProperties();
+//   const userProps = PropertiesService.getUserProperties();
 
-  const people = People.People.getBatchGet({
-    resourceNames: ['people/me'],
-    personFields: 'names,coverPhotos,photos,names,nicknames',
-  });
-
-  return ugh({
-    scriptProperties: scriptProps.getProperties(),
-    documentProperties: documentProps.getProperties(),
-    userProperties: userProps.getProperties(),
-    userId: md5(getEmail),
-    people,
-  });
-}
+//   return serialize({
+//     scriptProperties: scriptProps.getProperties(),
+//     // documentProperties: documentProps.getProperties(),
+//     userProperties: userProps.getProperties(),
+//   });
+// }
 
 export function sendEmails(e) {
 // authMode, day-of-month, day-of-week, hour, minute

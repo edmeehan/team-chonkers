@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import Modal from 'react-bootstrap/Modal'
-import { WorkoutEntry } from '../../models';
+import { WorkoutEntry } from '../../models/journal';
 import server from '../server';
 
 export default function FormWorkout(props) {
