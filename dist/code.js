@@ -1,14 +1,14 @@
 function doGet() {
 }
-function getMembers() {
+function getChonkers() {
+}
+function updateChonker() {
 }
 function getJournals() {
 }
 function createJournal() {
 }
-function updateJournal() {
-}
-function sendEmails() {
+function getUser() {
 }/*! For license information please see code.js.LICENSE.txt */
 !function(e, a) {
     for (var i in a) e[i] = a[i];
@@ -56,48 +56,51 @@ function sendEmails() {
         return __webpack_require__.d(getter, "a", getter), getter;
     }, __webpack_require__.o = function(object, property) {
         return Object.prototype.hasOwnProperty.call(object, property);
-    }, __webpack_require__.p = "", __webpack_require__(__webpack_require__.s = 4);
+    }, __webpack_require__.p = "", __webpack_require__(__webpack_require__.s = 5);
 }([ function(module, __webpack_exports__, __webpack_require__) {
     "use strict";
     __webpack_require__.d(__webpack_exports__, "c", (function() {
-        return getMembers;
+        return initProperties;
     })), __webpack_require__.d(__webpack_exports__, "b", (function() {
-        return getJournals;
-    })), __webpack_require__.d(__webpack_exports__, "a", (function() {
-        return createJournal;
-    })), __webpack_require__.d(__webpack_exports__, "e", (function() {
-        return updateJournal;
+        return getUserProperties;
     })), __webpack_require__.d(__webpack_exports__, "d", (function() {
-        return sendEmails;
+        return setScriptProperty;
+    })), __webpack_require__.d(__webpack_exports__, "a", (function() {
+        return getScriptProperty;
     }));
-    var md5__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1), md5__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(md5__WEBPACK_IMPORTED_MODULE_0__), getEmail = function() {
-        return Session.getActiveUser().getEmail();
-    };
-    function serialize(value) {
-        return JSON.parse(JSON.stringify(value));
+    var md5__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1), md5__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(md5__WEBPACK_IMPORTED_MODULE_0__), userProperties = PropertiesService.getUserProperties(), scriptProperties = PropertiesService.getScriptProperties(), userEmail = Session.getActiveUser().getEmail();
+    function initProperties() {
+        var people = People.People.getBatchGet({
+            resourceNames: [ "people/me" ],
+            personFields: "names,photos"
+        });
+        scriptProperties.getProperty("chonkers") || scriptProperties.setProperty("chonkers", "{}");
+        var user = JSON.parse(scriptProperties.getProperty("chonkers"));
+        user[md5__WEBPACK_IMPORTED_MODULE_0___default()(userEmail)] || (user[md5__WEBPACK_IMPORTED_MODULE_0___default()(userEmail)] = {
+            displayName: people.responses[0].person.names[0].displayName,
+            photoUrl: people.responses[0].person.photos[0].url,
+            share: !1
+        }, scriptProperties.setProperty("chonkers", JSON.stringify(user))), userProperties.setProperties({
+            id: md5__WEBPACK_IMPORTED_MODULE_0___default()(userEmail),
+            displayName: people.responses[0].person.names[0].displayName,
+            givenName: people.responses[0].person.names[0].givenName,
+            familyName: people.responses[0].person.names[0].familyName,
+            photoUrl: people.responses[0].person.photos[0].url
+        });
     }
-    function getSheet(sheetName) {
-        var getValues = !(arguments.length > 1 && arguments[1] !== undefined) || arguments[1], spreadSheet = SpreadsheetApp.getActiveSpreadsheet(), sheet = spreadSheet.getSheetByName(sheetName);
-        return getValues ? sheet.getDataRange().getValues() : sheet;
+    function getUserProperties() {
+        return userProperties.getProperties();
     }
-    function getMembers() {
-        var rows = getSheet(PropertiesService.getScriptProperties().getProperty("sheet_members"));
-        return rows.shift(), serialize(rows);
+    function setScriptProperty(key, value) {
+        return scriptProperties.setProperty(key, value), !0;
     }
-    function getJournals() {
-        var rows = getSheet(PropertiesService.getScriptProperties().getProperty("sheet_journals"));
-        return rows.shift(), serialize(rows);
+    function getScriptProperty(key) {
+        return scriptProperties.getProperty(key);
     }
-    function createJournal(_ref) {
-        var weight = _ref.weight, lBicep = _ref.lBicep, rBicep = _ref.rBicep, waist = _ref.waist, hips = _ref.hips, lThigh = _ref.lThigh, rThigh = _ref.rThigh, chest = _ref.chest, caliperMeasurment = _ref.caliperMeasurment, bodyFat = _ref.bodyFat, progress = _ref.progress;
-        return getSheet(PropertiesService.getScriptProperties().getProperty("sheet_journals"), !1).appendRow([ md5__WEBPACK_IMPORTED_MODULE_0___default()(getEmail), new Date, weight, lBicep, rBicep, waist, hips, lThigh, rThigh, chest, caliperMeasurment, bodyFat, progress ]).getIndex();
-    }
-    function updateJournal(index, journal) {}
-    function sendEmails(e) {}
 }, function(module, exports, __webpack_require__) {
     var crypt, utf8, isBuffer, bin, md5;
-    crypt = __webpack_require__(6), utf8 = __webpack_require__(2).utf8, isBuffer = __webpack_require__(7), 
-    bin = __webpack_require__(2).bin, (md5 = function(message, options) {
+    crypt = __webpack_require__(7), utf8 = __webpack_require__(3).utf8, isBuffer = __webpack_require__(8), 
+    bin = __webpack_require__(3).bin, (md5 = function(message, options) {
         message.constructor == String ? message = options && "binary" === options.encoding ? bin.stringToBytes(message) : utf8.stringToBytes(message) : isBuffer(message) ? message = Array.prototype.slice.call(message, 0) : Array.isArray(message) || (message = message.toString());
         for (var m = crypt.bytesToWords(message), l = 8 * message.length, a = 1732584193, b = -271733879, c = -1732584194, d = 271733878, i = 0; i < m.length; i++) m[i] = 16711935 & (m[i] << 8 | m[i] >>> 24) | 4278255360 & (m[i] << 24 | m[i] >>> 8);
         m[l >>> 5] |= 128 << l % 32, m[14 + (l + 64 >>> 9 << 4)] = l;
@@ -156,6 +159,49 @@ function sendEmails() {
         var digestbytes = crypt.wordsToBytes(md5(message, options));
         return options && options.asBytes ? digestbytes : options && options.asString ? bin.bytesToString(digestbytes) : crypt.bytesToHex(digestbytes);
     };
+}, function(module, __webpack_exports__, __webpack_require__) {
+    "use strict";
+    __webpack_require__.d(__webpack_exports__, "b", (function() {
+        return getChonkers;
+    })), __webpack_require__.d(__webpack_exports__, "e", (function() {
+        return updateChonker;
+    })), __webpack_require__.d(__webpack_exports__, "c", (function() {
+        return getJournals;
+    })), __webpack_require__.d(__webpack_exports__, "a", (function() {
+        return createJournal;
+    })), __webpack_require__.d(__webpack_exports__, "d", (function() {
+        return getUser;
+    }));
+    var md5__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1), md5__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(md5__WEBPACK_IMPORTED_MODULE_0__), _property_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(0), getEmail = function() {
+        return Session.getActiveUser().getEmail();
+    };
+    function serialize(value) {
+        return JSON.parse(JSON.stringify(value));
+    }
+    function getSheet(sheetName) {
+        var getValues = !(arguments.length > 1 && arguments[1] !== undefined) || arguments[1], spreadSheet = SpreadsheetApp.getActiveSpreadsheet(), sheet = spreadSheet.getSheetByName(sheetName);
+        return getValues ? sheet.getDataRange().getValues() : sheet;
+    }
+    function getChonkers() {
+        var chonkers = Object(_property_service__WEBPACK_IMPORTED_MODULE_1__["a"])("chonkers");
+        return JSON.parse(chonkers);
+    }
+    function updateChonker(id, data) {
+        var chonkers = JSON.parse(Object(_property_service__WEBPACK_IMPORTED_MODULE_1__["a"])("chonkers"));
+        return chonkers[id] = data, Object(_property_service__WEBPACK_IMPORTED_MODULE_1__["d"])("chonkers", JSON.stringify(chonkers)), 
+        chonkers;
+    }
+    function getJournals() {
+        var rows = getSheet(Object(_property_service__WEBPACK_IMPORTED_MODULE_1__["a"])("sheet_journals"));
+        return rows.shift(), serialize(rows);
+    }
+    function createJournal(_ref) {
+        var weight = _ref.weight, lBicep = _ref.lBicep, rBicep = _ref.rBicep, waist = _ref.waist, hips = _ref.hips, lThigh = _ref.lThigh, rThigh = _ref.rThigh, chest = _ref.chest, caliperMeasurment = _ref.caliperMeasurment, bodyFat = _ref.bodyFat, progress = _ref.progress;
+        return getSheet(Object(_property_service__WEBPACK_IMPORTED_MODULE_1__["a"])("sheet_journals"), !1).appendRow([ md5__WEBPACK_IMPORTED_MODULE_0___default()(getEmail), new Date, weight, lBicep, rBicep, waist, hips, lThigh, rThigh, chest, caliperMeasurment, bodyFat, progress ]).getIndex();
+    }
+    function getUser() {
+        return serialize(Object(_property_service__WEBPACK_IMPORTED_MODULE_1__["b"])());
+    }
 }, function(module, exports) {
     var charenc = {
         utf8: {
@@ -183,32 +229,20 @@ function sendEmails() {
     __webpack_require__.d(__webpack_exports__, "a", (function() {
         return doGet;
     }));
-    var md5__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1), md5__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(md5__WEBPACK_IMPORTED_MODULE_0__);
+    var _property_service__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(0);
     function doGet(e) {
-        var userProps, email, people, showChonkers, template = e && e.parameter && e.parameter.page ? HtmlService.createTemplateFromFile(e.parameter.page) : HtmlService.createTemplateFromFile("Index");
-        return template.data = [], userProps = PropertiesService.getUserProperties(), email = Session.getActiveUser().getEmail(), 
-        people = People.People.getBatchGet({
-            resourceNames: [ "people/me" ],
-            personFields: "names,coverPhotos,photos"
-        }), showChonkers = userProps.getProperty("showChonkers"), userProps.deleteAllProperties(), 
-        userProps.setProperties({
-            id: md5__WEBPACK_IMPORTED_MODULE_0___default()(email),
-            displayName: people.responses[0].person.names[0].displayName,
-            givenName: people.responses[0].person.names[0].givenName,
-            familyName: people.responses[0].person.names[0].familyName,
-            photoUrl: people.responses[0].person.photos[0].url,
-            coverUrl: people.responses[0].person.coverPhotos[0].url,
-            showChonkers: null !== showChonkers && showChonkers
-        }), template.evaluate();
+        var template = e && e.parameter && e.parameter.page ? HtmlService.createTemplateFromFile(e.parameter.page) : HtmlService.createTemplateFromFile("Index");
+        return template.data = [], Object(_property_service__WEBPACK_IMPORTED_MODULE_0__["c"])(), 
+        template.evaluate();
     }
 }, function(module, __webpack_exports__, __webpack_require__) {
     "use strict";
     __webpack_require__.r(__webpack_exports__), function(global) {
-        var _app_routes__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3), _app_methods__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(0);
-        global.doGet = _app_routes__WEBPACK_IMPORTED_MODULE_0__["a"], global.getMembers = _app_methods__WEBPACK_IMPORTED_MODULE_1__["c"], 
-        global.getJournals = _app_methods__WEBPACK_IMPORTED_MODULE_1__["b"], global.createJournal = _app_methods__WEBPACK_IMPORTED_MODULE_1__["a"], 
-        global.updateJournal = _app_methods__WEBPACK_IMPORTED_MODULE_1__["e"], global.sendEmails = _app_methods__WEBPACK_IMPORTED_MODULE_1__["d"];
-    }.call(this, __webpack_require__(5));
+        var _app_routes__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(4), _app_methods__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(2);
+        global.doGet = _app_routes__WEBPACK_IMPORTED_MODULE_0__["a"], global.getChonkers = _app_methods__WEBPACK_IMPORTED_MODULE_1__["b"], 
+        global.updateChonker = _app_methods__WEBPACK_IMPORTED_MODULE_1__["e"], global.getJournals = _app_methods__WEBPACK_IMPORTED_MODULE_1__["c"], 
+        global.createJournal = _app_methods__WEBPACK_IMPORTED_MODULE_1__["a"], global.getUser = _app_methods__WEBPACK_IMPORTED_MODULE_1__["d"];
+    }.call(this, __webpack_require__(6));
 }, function(module, exports) {
     var g;
     g = function() {

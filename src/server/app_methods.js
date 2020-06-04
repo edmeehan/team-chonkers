@@ -1,34 +1,45 @@
 import md5 from 'md5';
+import { getScriptProperty, getUserProperties, setScriptProperty } from './property_service';
 
 const getEmail = () => Session.getActiveUser().getEmail();
 
 function serialize(value) {
   return JSON.parse(JSON.stringify(value));
 }
-
 function getSheet(sheetName, getValues = true) {
   const spreadSheet = SpreadsheetApp.getActiveSpreadsheet();
   const sheet = spreadSheet.getSheetByName(sheetName);
   return getValues ? sheet.getDataRange().getValues() : sheet;
 }
 
-export function getMembers() {
-  const sheetName = PropertiesService.getScriptProperties().getProperty('sheet_members');
-  const rows = getSheet(sheetName); rows.shift();
-  return serialize(rows);
+/**
+ * CHONKERS METHODS
+ */
+export function getChonkers() {
+  const chonkers = getScriptProperty('chonkers');
+  return JSON.parse(chonkers);
 }
 
+export function updateChonker(id, data) {
+  const chonkers = JSON.parse(getScriptProperty('chonkers'));
+  chonkers[id] = data;
+  setScriptProperty('chonkers', JSON.stringify(chonkers));
+  return chonkers;
+}
+
+/**
+ * JOURNAL METHODS
+ */
 export function getJournals() {
-  const sheetName = PropertiesService.getScriptProperties().getProperty('sheet_journals');
+  const sheetName = getScriptProperty('sheet_journals');
   const rows = getSheet(sheetName); rows.shift();
   return serialize(rows);
 }
-
 export function createJournal({
   weight, lBicep, rBicep, waist, hips, lThigh,
   rThigh, chest, caliperMeasurment, bodyFat, progress,
 }) {
-  const sheetName = PropertiesService.getScriptProperties().getProperty('sheet_journals');
+  const sheetName = getScriptProperty('sheet_journals');
   return getSheet(sheetName, false).appendRow([
     md5(getEmail),
     new Date(),
@@ -45,31 +56,18 @@ export function createJournal({
     progress,
   ]).getIndex();
 }
+// export function updateJournal(index, journal) {}
 
-export function updateJournal(index, journal) {
+/**
+ * SEND EMAIL
+ */
+// export function sendEmails(e) {
+// // authMode, day-of-month, day-of-week, hour, minute
+// // month, second, timezone, triggerUid, week-of-year, year
 
-}
-
-// export function getWorkouts() {
-//   const sheetName = PropertiesService.getScriptProperties().getProperty('sheet_workouts');
-//   const rows = getSheet(sheetName); rows.shift();
-//   return serialize(rows);
 // }
 
-// export function getState() {
-//   const scriptProps = PropertiesService.getScriptProperties();
-//   // const documentProps = PropertiesService.getDocumentProperties();
-//   const userProps = PropertiesService.getUserProperties();
-
-//   return serialize({
-//     scriptProperties: scriptProps.getProperties(),
-//     // documentProperties: documentProps.getProperties(),
-//     userProperties: userProps.getProperties(),
-//   });
-// }
-
-export function sendEmails(e) {
-// authMode, day-of-month, day-of-week, hour, minute
-// month, second, timezone, triggerUid, week-of-year, year
-
+export function getUser() {
+  const user = getUserProperties();
+  return serialize(user);
 }

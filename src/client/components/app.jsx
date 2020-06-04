@@ -3,56 +3,65 @@ import { LineChart } from 'react-chartkick';
 import 'chart.js';
 import server from '../server';
 // models
-import Journal from '../../models/journal';
-import Chonker from '../../models/chonker';
-import Chart from '../../models/chart';
+import AppModel from '../../models/app';
 // components
 import FormJournal from './form.journal.jsx';
-// import FormWorkout from './form.workout.jsx';
+import FormSettings from './form.settings.jsx';
 
 export default function App() {
   const [loading, setLoading] = useState(false);
-  const [journals, setJournals] = useState([]);
-  const [chart, setChart] = useState([]);
-  const [showJournal, setShowJournal] = useState(false);
+  const [app, setApp] = useState(new AppModel({}));
+  const [modal, setModal] = useState({journal: false, settings: false});
 
   useEffect(() => {
     setLoading(true);
-
+    // fetch data
     Promise.all([
-      server.getMembers(),
       server.getJournals(),
-    ]).then(([membersSheet, journalsSheet]) => {
-      // create instances of all the models
-      const membersRows = membersSheet.map(item => new Chonker(item));
-      const journalsRows = journalsSheet.map(item => new Journal(item));
-      const chartModel = new Chart({membersRows, journalsRows});
-      setChart(chartModel);
-      setJournals(chartModel.myEntries);
-      console.log(chartModel);
-      setLoading(false);      
+      server.getUser(),
+      server.getChonkers()
+    ]).then(([journals, user, chonkers]) => {
+      const appModel = new AppModel({ chonkers, user, journals });
+      // set state
+      setApp(appModel);
+      // app is ready
+      setLoading(false);
     })
   }, []);
 
-  const handleJournalClose = () => setShowJournal(false);
-  const handleJournalOpen = () => setShowJournal(true);
+  const handleJournalClose = () => setModal({...modal, journal: false});
+  const handleJournalOpen = () => setModal({...modal, journal: true});
+  const handleSettingsClose = () => setModal({...modal, settings: false});
+  const handleSettingsOpen = () => setModal({...modal, settings: true});
+  const handleSettingsSubmit = (data) => server.updateChonker(app.user.id, data).then((payload) => {
+    const chonkers = Object.assign(app.chonkers, payload);
+    const { user, journals } = app;
+    const appModel = new AppModel({ chonkers, user: user.serialize, journals });
+    setApp(appModel);
+  });
 
   return (
     <div>
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
-        <span className="navbar-brand mb-0 h1">Team Chonkers</span>
+        <div className="container">
+          <span className="navbar-brand mb-0 h1">Team Chonkers</span>
+          <button onClick={handleSettingsOpen} type="button" className="btn btn-secondary">
+            <img src={app.user.image} alt={app.user.name} className="rounded-circle mr-3" width="35" />
+            { app.user.name }
+          </button>
+        </div>
       </nav>
       <div className="container">
         <div className="row">
           <div className="col mt-5 mb-4">
-            <LineChart data={chart.display} curve={false} />
+            <LineChart data={app.display} curve={false} />
           </div>
         </div>
 
         <button onClick={handleJournalOpen} className="btn btn-primary">Add Journal Entry</button>
         
-        <FormJournal show={showJournal} onClose={handleJournalClose}></FormJournal>
-        {/* <FormWorkout show={showWorkout} onClose={handleWorkoutClose}></FormWorkout> */}
+        <FormJournal show={modal.journal} onClose={handleJournalClose}></FormJournal>
+        <FormSettings user={app.mySettings} show={modal.settings} onClose={handleSettingsClose} onSubmit={handleSettingsSubmit} ></FormSettings>
 
         <table className="table">
           <thead>
@@ -71,7 +80,7 @@ export default function App() {
             </tr>
           </thead>
           <tbody>
-            {journals.map((entry) => 
+            {app.myEntries.map((entry) => 
               <tr key={entry.timeStamp}>
                 <td>{entry.timeStamp}</td>
                 <td>{entry.weight}</td>

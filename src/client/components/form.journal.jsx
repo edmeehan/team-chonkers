@@ -2,34 +2,46 @@ import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import {IMaskInput} from 'react-imask';
 import Modal from 'react-bootstrap/Modal'
-import { JournalEntry } from '../../models/journal';
 import server from '../server';
 
-export default function FormJournal(props) {
+export default function FormJournal({show,onClose}) {
   const [loading, setLoading] = useState(false);
+  const [form, setForm] = useState({
+    progress: null,
+    weight: null,
+    lBicep: null,
+    rBicep: null,
+    chest: null,
+    waist: null,
+    hips: null,
+    lThigh: null,
+    rThigh: null,
+    caliperMeasurment: null,
+    bodyFat: null
+  });
+
   const weightMask = '000.0';
   const defMask = '00.00';
   
-  async function handleSubmit(event) {
+  function handleSubmit(event) {
     event.preventDefault();
     setLoading(true);
-    const journal = {};
-    const formData = new FormData(event.target);
-    for (const [key, value]  of formData.entries()) {
-      journal[key] = value;
-    }
-    // handle updating
-    if(await server.createJournal(journal)) {
-      props.onClose();
+    server.createJournal(form).then((data) => {
+      onClose();
       setLoading(false);
-    }
+    });
+  }
+
+  function handleUpdate(event, property) {
+    console.log(property, event.target.value);
+    setForm({...form, [property]:event.target.value});
   }
 
   return (
     <Modal
       size="lg"
-      onHide={props.onClose}
-      show={props.show}>
+      onHide={onClose}
+      show={show}>
       <Modal.Body>
         <form id="journal"
           onSubmit={handleSubmit}
@@ -41,7 +53,7 @@ export default function FormJournal(props) {
               <small className="mr-4 text-muted">Not so much.</small>
               {[1,2,3,4,5].map((value) =>
                 <div key={value} className="form-check form-check-inline">
-                  <input type="radio" name="progress" value={value} className="form-check-input"/>
+                  <input onChange={(e) => handleUpdate(e, 'progress')} type="radio" name="progress" value={value} className="form-check-input"/>
                   <label className="form-check-label">{value}</label>
                 </div>
               )}
@@ -57,6 +69,7 @@ export default function FormJournal(props) {
                     required
                     className="form-control"
                     mask={weightMask}
+                    onChange={(e) => handleUpdate(e, 'weight')}
                   />
                   <div className="input-group-append">
                     <span className="input-group-text">lbs</span>
@@ -222,15 +235,15 @@ export default function FormJournal(props) {
       </Modal.Body>
       <Modal.Footer>
         <button className="btn btn-secondary"
-          onClick={props.onClose}>
+          onClick={onClose}>
           Cancel
         </button>
         <button className="btn btn-primary"
           disabled={loading}
           type="submit"
           form="journal">
-            Submit
-          </button>
+          Submit
+        </button>
       </Modal.Footer>
     </Modal>
   )
@@ -238,6 +251,6 @@ export default function FormJournal(props) {
 
 FormJournal.propTypes = {
   show: PropTypes.bool,
-  journal: JournalEntry,
+  journal: PropTypes.object,
   onClose: PropTypes.func
 };

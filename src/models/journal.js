@@ -1,4 +1,4 @@
-export default class Journal {
+export default class JournalModel {
   constructor(journalRow) {
     if(Array.isArray(journalRow)) {
       this.fromSheet(journalRow);
