@@ -36,11 +36,10 @@ export function getJournals() {
   return serialize(rows);
 }
 export function createJournal({
-  weight, lBicep, rBicep, waist, hips, lThigh,
-  rThigh, chest, caliperMeasurment, bodyFat, progress,
+  weight, lBicep, rBicep, waist, hips, lThigh, rThigh, chest, caliperMeasurment, bodyFat, progress,
 }) {
   const sheetName = getScriptProperty('sheet_journals');
-  return getSheet(sheetName, false).appendRow([
+  const payload = [
     md5(getEmail),
     new Date(),
     weight,
@@ -54,7 +53,13 @@ export function createJournal({
     caliperMeasurment,
     bodyFat,
     progress,
-  ]).getIndex();
+  ];
+  console.log({ payload, argument: arguments[0] });
+  try {
+    console.log('New row:', getSheet(sheetName, false).appendRow(payload).getLastRow());
+  } catch (error) {
+    console.error(error);
+  }
 }
 // export function updateJournal(index, journal) {}
 

@@ -196,8 +196,16 @@ function getUser() {
         return rows.shift(), serialize(rows);
     }
     function createJournal(_ref) {
-        var weight = _ref.weight, lBicep = _ref.lBicep, rBicep = _ref.rBicep, waist = _ref.waist, hips = _ref.hips, lThigh = _ref.lThigh, rThigh = _ref.rThigh, chest = _ref.chest, caliperMeasurment = _ref.caliperMeasurment, bodyFat = _ref.bodyFat, progress = _ref.progress;
-        return getSheet(Object(_property_service__WEBPACK_IMPORTED_MODULE_1__["a"])("sheet_journals"), !1).appendRow([ md5__WEBPACK_IMPORTED_MODULE_0___default()(getEmail), new Date, weight, lBicep, rBicep, waist, hips, lThigh, rThigh, chest, caliperMeasurment, bodyFat, progress ]).getIndex();
+        var weight = _ref.weight, lBicep = _ref.lBicep, rBicep = _ref.rBicep, waist = _ref.waist, hips = _ref.hips, lThigh = _ref.lThigh, rThigh = _ref.rThigh, chest = _ref.chest, caliperMeasurment = _ref.caliperMeasurment, bodyFat = _ref.bodyFat, progress = _ref.progress, sheetName = Object(_property_service__WEBPACK_IMPORTED_MODULE_1__["a"])("sheet_journals"), payload = [ md5__WEBPACK_IMPORTED_MODULE_0___default()(getEmail), new Date, weight, lBicep, rBicep, waist, hips, lThigh, rThigh, chest, caliperMeasurment, bodyFat, progress ];
+        console.log({
+            payload: payload,
+            argument: arguments[0]
+        });
+        try {
+            console.log("New row:", getSheet(sheetName, !1).appendRow(payload).getLastRow());
+        } catch (error) {
+            console.error(error);
+        }
     }
     function getUser() {
         return serialize(Object(_property_service__WEBPACK_IMPORTED_MODULE_1__["b"])());

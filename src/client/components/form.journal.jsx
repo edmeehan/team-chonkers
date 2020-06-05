@@ -5,36 +5,40 @@ import Modal from 'react-bootstrap/Modal'
 import server from '../server';
 
 export default function FormJournal({show,onClose}) {
+  const formInitState = {
+    progress: '',
+    weight: '',
+    lBicep: '',
+    rBicep: '',
+    chest: '',
+    waist: '',
+    hips: '',
+    lThigh: '',
+    rThigh: '',
+    caliperMeasurment: '',
+    bodyFat: ''
+  };
   const [loading, setLoading] = useState(false);
-  const [form, setForm] = useState({
-    progress: null,
-    weight: null,
-    lBicep: null,
-    rBicep: null,
-    chest: null,
-    waist: null,
-    hips: null,
-    lThigh: null,
-    rThigh: null,
-    caliperMeasurment: null,
-    bodyFat: null
-  });
-
+  const [form, setForm] = useState(formInitState);
   const weightMask = '000.0';
   const defMask = '00.00';
   
-  function handleSubmit(event) {
+  function handleOnSubmit(event) {
     event.preventDefault();
     setLoading(true);
-    server.createJournal(form).then((data) => {
+    server.createJournal(form).then(() => {
       onClose();
       setLoading(false);
-    });
+      setForm(formInitState);
+    }).catch(e => console.log('error', e));
   }
 
-  function handleUpdate(event, property) {
-    console.log(property, event.target.value);
-    setForm({...form, [property]:event.target.value});
+  function handleOnChange(event) {
+    setForm({...form, [event.target.name]:event.target.value});
+  }
+
+  function handleOnAccept(val, mask) {
+    setForm({...form, [mask.el.input.name]:val});
   }
 
   return (
@@ -44,7 +48,7 @@ export default function FormJournal({show,onClose}) {
       show={show}>
       <Modal.Body>
         <form id="journal"
-          onSubmit={handleSubmit}
+          onSubmit={handleOnSubmit}
           className="text-center">
           
           <fieldset>
@@ -53,7 +57,7 @@ export default function FormJournal({show,onClose}) {
               <small className="mr-4 text-muted">Not so much.</small>
               {[1,2,3,4,5].map((value) =>
                 <div key={value} className="form-check form-check-inline">
-                  <input onChange={(e) => handleUpdate(e, 'progress')} type="radio" name="progress" value={value} className="form-check-input"/>
+                  <input onChange={handleOnChange} type="radio" name="progress" value={value} className="form-check-input"/>
                   <label className="form-check-label">{value}</label>
                 </div>
               )}
@@ -69,8 +73,8 @@ export default function FormJournal({show,onClose}) {
                     required
                     className="form-control"
                     mask={weightMask}
-                    onChange={(e) => handleUpdate(e, 'weight')}
-                  />
+                    value={form.weight}
+                    onAccept={handleOnAccept}/>
                   <div className="input-group-append">
                     <span className="input-group-text">lbs</span>
                   </div>
@@ -92,11 +96,13 @@ export default function FormJournal({show,onClose}) {
               <div className="form-group col col-sm-6 col-md-4 col-lg-3">
                 <div className="input-group">
                   <IMaskInput
-                    mask={defMask}
                     placeholder="Left"
                     name="lBicep"
                     required
-                    className="form-control"/>
+                    className="form-control"
+                    mask={defMask}
+                    value={form.lBicep}
+                    onAccept={handleOnAccept}/>
                   <div className="input-group-append">
                     <span className="input-group-text">in</span>
                   </div>
@@ -105,11 +111,13 @@ export default function FormJournal({show,onClose}) {
               <div className="form-group col col-sm-6 col-md-4 col-lg-3">
                 <div className="input-group">  
                   <IMaskInput
-                    mask={defMask}
                     placeholder="Right"
                     name="rBicep"
                     required
-                    className="form-control"/>
+                    className="form-control"
+                    mask={defMask}
+                    value={form.rBicep}
+                    onAccept={handleOnAccept}/>
                   <div className="input-group-append">
                     <span className="input-group-text">in</span>
                   </div>
@@ -125,7 +133,9 @@ export default function FormJournal({show,onClose}) {
                     mask={defMask}
                     name="chest"
                     required
-                    className="form-control"/>
+                    className="form-control"
+                    value={form.chest}
+                    onAccept={handleOnAccept}/>
                   <div className="input-group-append">
                     <span className="input-group-text">in</span>
                   </div>
@@ -141,7 +151,9 @@ export default function FormJournal({show,onClose}) {
                     mask={defMask}
                     name="waist"
                     required
-                    className="form-control"/>
+                    className="form-control"
+                    value={form.waist}
+                    onAccept={handleOnAccept}/>
                   <div className="input-group-append">
                     <span className="input-group-text">in</span>
                   </div>
@@ -157,7 +169,9 @@ export default function FormJournal({show,onClose}) {
                     mask={defMask}
                     name="hips"
                     required
-                    className="form-control"/>
+                    className="form-control"
+                    value={form.hips}
+                    onAccept={handleOnAccept}/>
                   <div className="input-group-append">
                     <span className="input-group-text">in</span>
                   </div>
@@ -174,7 +188,9 @@ export default function FormJournal({show,onClose}) {
                     placeholder="Left"
                     name="lThigh"
                     required
-                    className="form-control"/>
+                    className="form-control"
+                    value={form.lThigh}
+                    onAccept={handleOnAccept}/>
                   <div className="input-group-append">
                     <span className="input-group-text">in</span>
                   </div>
@@ -187,7 +203,9 @@ export default function FormJournal({show,onClose}) {
                     placeholder="Right"
                     name="rThigh"
                     required
-                    className="form-control"/>
+                    className="form-control"
+                    value={form.rThigh}
+                    onAccept={handleOnAccept}/>
                   <div className="input-group-append">
                     <span className="input-group-text">in</span>
                   </div>
@@ -211,7 +229,9 @@ export default function FormJournal({show,onClose}) {
                   <IMaskInput
                     mask='00'
                     name="caliperMeasurment"
-                    className="form-control"/>
+                    className="form-control"
+                    value={form.caliperMeasurment}
+                    onAccept={handleOnAccept}/>
                   <div className="input-group-append">
                     <span className="input-group-text">mm</span>
                   </div>
@@ -223,7 +243,9 @@ export default function FormJournal({show,onClose}) {
                   <IMaskInput
                     mask='00.0'
                     name="bodyFat"
-                    className="form-control"/>
+                    className="form-control"
+                    value={form.bodyFat}
+                    onAccept={handleOnAccept}/>
                   <div className="input-group-append">
                     <span className="input-group-text">%</span>
                   </div>
