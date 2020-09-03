@@ -45,10 +45,13 @@ export default function App() {
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
         <div className="container">
           <span className="navbar-brand mb-0 h1">Team Chonkers</span>
-          <button onClick={handleSettingsOpen} type="button" className="btn btn-secondary">
-            <img src={app.user.image} alt={app.user.name} className="rounded-circle mr-3" width="35" />
-            { app.user.name }
-          </button>
+          <div>
+            <button onClick={handleJournalOpen} className="btn btn-primary mr-3">Add Entry</button>
+            <button onClick={handleSettingsOpen} type="button" className="btn btn-link">
+              { app.user.name }
+              <img src={app.user.image} alt={app.user.name} className="rounded-circle ml-2" width="35" />
+            </button>
+          </div>
         </div>
       </nav>
       <div className="container">
@@ -58,8 +61,6 @@ export default function App() {
           </div>
         </div>
 
-        <button onClick={handleJournalOpen} className="btn btn-primary">Add Journal Entry</button>
-        
         <FormJournal show={modal.journal} onClose={handleJournalClose}></FormJournal>
         <FormSettings user={app.mySettings} show={modal.settings} onClose={handleSettingsClose} onSubmit={handleSettingsSubmit} ></FormSettings>
 
