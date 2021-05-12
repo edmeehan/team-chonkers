@@ -23,7 +23,7 @@
   "license": "MIT",
   "dependencies": {
     "bootstrap": "^4.4.1",
-    "chart.js": "^2.9.3",
+    "chart.js": "^2.9.4",
     "lodash": "^4.17.15",
     "md5": "^2.2.1",
     "prop-types": "^15.7.2",
